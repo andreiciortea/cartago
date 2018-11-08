@@ -18,6 +18,7 @@
 package cartago;
 
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +27,6 @@ import java.util.Map;
 import cartago.infrastructure.CartagoInfrastructureLayerException;
 import cartago.infrastructure.ICartagoInfrastructureLayer;
 import cartago.tools.inspector.Inspector;
-import cartago.util.agent.ActionFeedbackQueue;
 
 
 /**
@@ -111,6 +111,14 @@ public class CartagoService {
 			throw new CartagoNodeNotActiveException();
 		}
 	}
+	
+	public static Collection<CartagoWorkspace> getWorkspaces() throws CartagoException {
+      if (instance != null){
+          return instance.getWorkspaces();
+      } else {
+          throw new CartagoNodeNotActiveException();
+      }
+    }
 	
 	/**
 	 * 

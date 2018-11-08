@@ -17,9 +17,8 @@
  */
 package cartago;
 
-import java.util.*;
-
-import cartago.tools.inspector.Inspector;
+import java.util.Collection;
+import java.util.HashMap;
 
 
 /**
@@ -129,6 +128,11 @@ public class CartagoNode {
 			throw new CartagoException("Workspace not found.");
 		}
 		return env;
+	}
+	
+	
+	public synchronized Collection<CartagoWorkspace> getWorkspaces() throws CartagoException {
+	  return this.wsps.values();
 	}
 	
 	
