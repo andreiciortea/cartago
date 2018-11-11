@@ -26,14 +26,34 @@ import java.io.Serializable;
  */
 public class WorkspaceId implements Serializable {
 
+    private String iri;
+    
 	private String name;
 	private NodeId nodeId;
 	private int hashCode;
 	
-	WorkspaceId(String name, NodeId id){
-		this.name = name;
+	public WorkspaceId() { }
+	
+	public WorkspaceId(String name, NodeId id){
+	    // TODO: workaround for IRIs
+	    if (name.startsWith("http://")) {
+	      this.iri = name;
+	      this.name = name.substring(name.lastIndexOf("/") + 1);
+	    } else {
+	      this.iri = null;
+	      this.name = name;
+	    }
+	    
 		this.nodeId = id;
 		hashCode = id.hashCode();
+	}
+	
+	public boolean isWebResource() {
+	  return (iri != null);
+	}
+	
+	public String getIRI() {
+	  return iri;
 	}
 	
 	/**

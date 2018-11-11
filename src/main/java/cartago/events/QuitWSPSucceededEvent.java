@@ -29,6 +29,8 @@ public class QuitWSPSucceededEvent extends ActionSucceededEvent {
 
 	private WorkspaceId wspId;
 	
+	public QuitWSPSucceededEvent() {  }
+	
 	public QuitWSPSucceededEvent(long id, long actionId, Op op, ArtifactId aid, WorkspaceId wspId){
 		super(id,actionId,op,aid);
 		this.wspId = wspId;

@@ -26,7 +26,7 @@ import java.util.concurrent.locks.*;
  * @author aricci
  *
  */
-class OpExecutionFrame {
+public class OpExecutionFrame {
 
 	public enum OpExecState { EXECUTING, SUCCEEDED, NOT_ALIGNED, TIME_OUT, INTERRUPTED, OP_NOT_EXIST, FAILED };
 	private OpExecState state;
@@ -113,7 +113,7 @@ class OpExecutionFrame {
 		return userId;
 	}
 
-	ICartagoCallback getAgentListener(){
+	public ICartagoCallback getAgentListener(){
 		return eventListener;
 	}
 	

@@ -29,6 +29,8 @@ public class ConsultManualSucceededEvent extends ActionSucceededEvent {
 
 	private Manual man;
 	
+	public ConsultManualSucceededEvent() {  }
+	
 	public ConsultManualSucceededEvent(long id, long actionId, Op op, ArtifactId aid, Manual man){
 		super(id,actionId,op,aid);
 		this.man = man;

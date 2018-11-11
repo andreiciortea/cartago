@@ -31,6 +31,8 @@ public abstract class CartagoActionEvent extends CartagoEvent {
 	private long actionId;
 	private Op op;
 	
+	protected CartagoActionEvent() { }
+	
 	protected CartagoActionEvent(long id, long actionId, Op op){
 		super(id);
 		this.actionId = actionId;
@@ -45,6 +47,10 @@ public abstract class CartagoActionEvent extends CartagoEvent {
 	public long getActionId(){
 		return actionId;
 	}
+	
+	public void setActionId(long actionId){
+      this.actionId = actionId;
+    }
 
 	public Op getOp() {
 		return op;

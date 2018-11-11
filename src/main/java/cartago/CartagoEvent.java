@@ -28,6 +28,8 @@ public abstract class CartagoEvent implements java.io.Serializable {
 	private long when;
 	private long id;
 	
+	protected CartagoEvent() { }
+	
 	protected CartagoEvent(long id){
 		this.id = id;
 		when = System.currentTimeMillis();
@@ -40,6 +42,10 @@ public abstract class CartagoEvent implements java.io.Serializable {
 	 */
 	public long getId(){
 		return id;
+	}
+	
+	public void setId(long id) {
+	  this.id = id;
 	}
 
 	/**

@@ -41,7 +41,9 @@ public class Manual implements java.io.Serializable {
 	private String source;
 
 	public static final Manual EMPTY_MANUAL = new Manual("",null);
-		
+	
+	public Manual () {  }
+	
 	public Manual(String manualName, URI uri){
 		this.name = manualName;
 		this.uri = uri;

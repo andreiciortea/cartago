@@ -597,7 +597,7 @@ public abstract class Artifact {
 		return id;
 	}
 
-	OpExecutionFrame getOpFrame(){
+	protected OpExecutionFrame getOpFrame(){
 		return opExecFrame;
 	}
 

@@ -17,6 +17,9 @@
  */
 package cartago;
 
+import cartago.infrastructure.web.CartagoHttpClient;
+import cartago.infrastructure.web.models.Workspace;
+
 /**
  * Artifact providing functionalities 
  * to manage/join workspaces and the node.
@@ -46,17 +49,84 @@ public class NodeArtifact extends Artifact {
 				WorkspaceKernel wspKernel = wsp.getKernel(); 
 				ICartagoContext ctx = wspKernel.joinWorkspace(new cartago.AgentIdCredential(this.getCurrentOpAgentId().getGlobalId()), opFrame.getAgentListener());
 				WorkspaceId wspId = ctx.getWorkspaceId();
+				
+				if (wspId.isWebResource()) {
+                  CartagoHttpClient client = new CartagoHttpClient();
+                  Workspace remoteWorkspace = client.joinRemoteWorkspace(wspName, getCurrentOpAgentId().getGlobalId(), ctx);
+                  
+                  if (remoteWorkspace == null) {
+                    failed("Workspace not available.");
+                  }
+                }
+				
 				res.set(wspId);
 				thisWsp.notifyJoinWSPCompleted(opFrame.getAgentListener(), opFrame.getActionId(), opFrame.getSourceArtifactId(), opFrame.getOperation(), wspId, ctx);
 				opFrame.setCompletionNotified();
 			} else {
-				failed("Workspace not available.");
+			    if (wspName.startsWith("http://")) {
+			      tryRemoteWorkspace(wspName, res);
+			    } else {
+			      failed("Workspace not available.");
+			    }
 			}
 		} catch (Exception ex){
 			//ex.printStackTrace();
-			failed("Join Workspace error: "+ex.getMessage());
+		    if (wspName.startsWith("http://")) {
+                tryRemoteWorkspace(wspName, res);
+		    } else {
+		        failed("Join Workspace error: "+ex.getMessage());
+		    }
 		}
 	}
+	
+	private void tryRemoteWorkspace(String wspName, OpFeedbackParam<WorkspaceId> res) {
+      log("Attempting to join remote workspace...");
+      
+      createWorkspace(wspName);
+      
+      try {
+        OpExecutionFrame opFrame = this.getOpFrame();
+        CartagoWorkspace wsp = env.getNode().getWorkspace(wspName);
+        
+        if (wsp != null) {
+            WorkspaceKernel wspKernel = wsp.getKernel(); 
+            ICartagoContext agentBody = wspKernel.joinWorkspace(new cartago.AgentIdCredential(this.getCurrentOpAgentId().getGlobalId()), opFrame.getAgentListener());
+            WorkspaceId wspId = agentBody.getWorkspaceId();
+            
+            CartagoHttpClient client = new CartagoHttpClient();
+            Workspace remoteWorkspace = client.joinRemoteWorkspace(wspName, getCurrentOpAgentId().getGlobalId(), agentBody);
+            
+            if (remoteWorkspace != null) {
+              res.set(wspId);
+              thisWsp.notifyJoinWSPCompleted(opFrame.getAgentListener(), opFrame.getActionId(), opFrame.getSourceArtifactId(), opFrame.getOperation(), wspId, agentBody);
+              opFrame.setCompletionNotified();
+            } else {
+              // TODO: rollback changes
+              failed("Workspace not available.");
+            }
+        } else {
+          failed("Workspace not available.");
+        }
+      } catch (Exception ex) {
+        failed("Join Workspace error: " + ex.getMessage());
+      }
+    }
+	
+//	private void tryRemoteWorkspace(String wspName, OpFeedbackParam<WorkspaceId> res) {
+//      log("Attempting to join remote workspace...");
+//      
+//      CartagoHttpClient client = new CartagoHttpClient();
+//      Workspace remoteWorkspace = client.joinRemoteWorkspace(wspName, getCurrentOpAgentId().getGlobalId(), this.getOpFrame().getAgentListener());
+//      
+//      if (remoteWorkspace != null) {
+//        createWorkspace(wspName);
+//        
+//        // Local workspace was created, redo the operation
+//        joinWorkspace(wspName, res);
+//      } else {
+//        failed("Workspace not available.");
+//      }
+//	}
 	
 	/**
 	 * Join a local workspace

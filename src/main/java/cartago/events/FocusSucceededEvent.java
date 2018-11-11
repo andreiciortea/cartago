@@ -30,6 +30,8 @@ public class FocusSucceededEvent extends ActionSucceededEvent {
 	private ArtifactId targetArtifact;
 	private List<ArtifactObsProperty> props;
 	
+	public FocusSucceededEvent() {  }
+	
 	public FocusSucceededEvent(long id, long actionId, Op op, ArtifactId aid, ArtifactId targetArtifact, List<ArtifactObsProperty> props){
 		super(id,actionId,op,aid);
 		this.targetArtifact = targetArtifact;

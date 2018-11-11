@@ -35,10 +35,15 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import cartago.events.*;
+
+import cartago.events.ActionFailedEvent;
+import cartago.events.ActionSucceededEvent;
+import cartago.events.ArtifactObsEvent;
+import cartago.events.FocussedArtifactDisposedEvent;
+import cartago.events.ObsArtListChangedEvent;
+import cartago.infrastructure.web.WebAgentBody;
 import cartago.security.IWorkspaceSecurityManager;
 import cartago.security.NullSecurityManager;
-import cartago.security.SecurityException;
 
 /**
  * This class represents the core machinery of a workspace.
@@ -125,6 +130,7 @@ public class WorkspaceKernel  {
 		// creating the basic set of artifacts
 
 		try {
+		    // TODO: instantiate WebWorkspaceArtifact
 			makeArtifact(wspManager.getAgentId(),"workspace", "cartago.WorkspaceArtifact", new ArtifactConfig(this));
 			makeArtifact(wspManager.getAgentId(),"node", "cartago.NodeArtifact", new ArtifactConfig(this));
 			makeArtifact(wspManager.getAgentId(),"manrepo","cartago.ManRepoArtifact",new ArtifactConfig(this));
@@ -204,7 +210,14 @@ public class WorkspaceKernel  {
 				}
 			} 
 			if (joinOK){
-				context = new AgentBody(userId, this, eventListener); 
+			    // TODO: create WebAgentBody
+			    if (id.isWebResource()) {
+			      log("Workspace is a Web resource, adding Web agent body");
+			      context = new WebAgentBody(userId, this, eventListener);
+			    } else {
+			      context = new AgentBody(userId, this, eventListener);
+			    }
+			    
 				joinedAgents.put(userId.getGlobalId(),context);
 
 				/* creating the body and focusing on it */

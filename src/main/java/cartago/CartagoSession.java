@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.*;
+
+import com.sun.media.jfxmedia.logging.Logger;
+
 import cartago.events.*;
 import cartago.util.agent.ArtifactObsProperty;
 
@@ -148,12 +151,17 @@ public class CartagoSession implements ICartagoSession, ICartagoCallback {
 				ICartagoContext ctx = null;
 				ctx = contexts.get(wid);
 				if (ctx != null){
+				  if (wid.isWebResource()) {
+				    ctx.doAction(actId, artName, op, test, timeout);
+                    return actId;
+				  } else {
 					ArtifactId aid = ctx.getArtifactIdFromOp(artName, op);
 					if (aid != null){
 						ctx.doAction(actId, aid, op, test, timeout);
 						return actId;
 					}
-				}
+				  }
+			  }
 			}
 		}
 		throw new CartagoException("Wrong workspace.");
@@ -287,8 +295,7 @@ public class CartagoSession implements ICartagoSession, ICartagoCallback {
 	}
 
 	public void notifyCartagoEvent(CartagoEvent ev) {
-		// System.out.println("NOTIFIED "+ev.getId()+"
-		// "+ev.getClass().getCanonicalName());
+//		System.out.println("NOTIFIED " + ev.getId() + " " + ev.getClass().getCanonicalName());
 		checkWSPEvents(ev);
 		boolean keepEvent = true;
 		if (agentArchListener != null) {

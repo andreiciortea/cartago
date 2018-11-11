@@ -120,6 +120,14 @@ public class CartagoService {
       }
     }
 	
+	public static CartagoWorkspace getWorkspace(String wspName) throws CartagoException {
+      if (instance != null){
+          return instance.getWorkspace(wspName);
+      } else {
+          throw new CartagoNodeNotActiveException();
+      }
+    }
+	
 	/**
 	 * 
 	 * Creates a workspace on the node instance 

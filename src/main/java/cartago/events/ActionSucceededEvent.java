@@ -29,6 +29,8 @@ public class ActionSucceededEvent extends CartagoActionEvent {
 	
 	private ArtifactId aid;
 	
+	public ActionSucceededEvent() {}
+	
 	public ActionSucceededEvent(long id, long actionId, Op op, ArtifactId aid){
 		super(id,actionId,op);
 		this.aid = aid;

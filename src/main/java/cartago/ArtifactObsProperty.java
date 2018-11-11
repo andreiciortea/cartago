@@ -35,6 +35,8 @@ public class ArtifactObsProperty implements java.io.Serializable {
 	private String fullId;
 	private List<Object> annots = null;
 	
+	public ArtifactObsProperty() {  }
+	
 	public ArtifactObsProperty(String fullId, long id, String name, Object... values){
     	this.name = name;
     	this.values = values;

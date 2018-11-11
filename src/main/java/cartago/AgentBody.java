@@ -36,7 +36,7 @@ public class AgentBody implements ICartagoContext {
 	protected LinkedList<ArtifactDescriptor> focusedArtifacts;
 	protected AgentBodyArtifact bodyArtifact;
 	
-	AgentBody(AgentId id, WorkspaceKernel env, ICartagoCallback agentCallback){
+	protected AgentBody(AgentId id, WorkspaceKernel env, ICartagoCallback agentCallback){
 		this.id = id;
 		this.wspKernel = env;
 		this.agentCallback = agentCallback;
